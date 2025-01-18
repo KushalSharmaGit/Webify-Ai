@@ -276,9 +276,9 @@ Here are some examples of correct usage of artifacts:
       You can now view the bouncing ball animation in the preview. The ball will start falling from the top of the screen and bounce realistically when it hits the bottom.
     </assistant_response>
   </example>
-</examples>
-`;
-const CONTINUE_PROMPT = stripIndents`
+</examples>`;
+
+ const CONTINUE_PROMPT = stripIndents`
   Continue your prior response. IMPORTANT: Immediately begin from where you left off without any interruptions.
   Do not repeat any content, including artifact and action tags.
 `;
