@@ -1,4 +1,4 @@
-export function stripIndents(arg0, ...values) {
+function stripIndents(arg0, ...values) {
     if (typeof arg0 !== 'string') {
       const processedString = arg0.reduce((acc, curr, i) => {
         acc += curr + (values[i] ?? '');
@@ -19,4 +19,6 @@ export function stripIndents(arg0, ...values) {
       .trimStart()
       .replace(/[\r\n]$/, '');
   }
+
+module.exports = { stripIndents };
   

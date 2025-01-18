@@ -1,8 +1,8 @@
-export const WORK_DIR_NAME = 'project';
-export const WORK_DIR = `/home/${WORK_DIR_NAME}`;
-export const MODIFICATIONS_TAG_NAME = 'bolt_file_modifications';
+const WORK_DIR_NAME = 'project';
+const WORK_DIR = `/home/${WORK_DIR_NAME}`;
+const MODIFICATIONS_TAG_NAME = 'bolt_file_modifications';
 
-export const allowedHTMLElements = [
+const allowedHTMLElements = [
     'a',
     'b',
     'blockquote',
@@ -52,3 +52,10 @@ export const allowedHTMLElements = [
     'ul',
     'var',
   ];
+
+module.exports = {
+    WORK_DIR_NAME,
+    WORK_DIR,
+    MODIFICATIONS_TAG_NAME,
+    allowedHTMLElements
+}
