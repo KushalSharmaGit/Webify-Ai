@@ -20,21 +20,31 @@ const context = {
     - For logos and icons, default to Lucide React icons.
     - For images, use stock photos from Unsplash (using valid URLs) without downloading them.
     - Give me all the files of the project just do not include the node_modules folder
-    - Also include files like package.json,tsconfig, tailwind.config.js etc give all the files
+    - Also include files like package.json,tsconfig, tailwind.config.js, index.css, main.tsx, index.html, App.tsx,postcss.config.jss and all the other config files
+    - Keep the index.html in the root folder and follow correct folder structure.
+    - Keep the index.css in the src folder and follow the correct folder structure
+    - index.html is the entry point of our application so use it for the main in the package.json
+    -Use export in each file including postcss.config.js and do not use module.export anywhere because be have set the type as module.
+    -Also Give the type in package.json as module and use module type exports in each file and follow all other rules as well.
+    - Also include the files which you need according to the project like components, pages etc files they are optional only give is they are required.
     - Give me the proper content for each file according to the project
     - Give the proper file structure in the response.
 
+    Alert: The Location of the index.html(in the root folder) and index.css(in the src folder) is very important place it very carefully and place all the config files like postcss.config.js, tsconfig.json, tailwind.config.js, and the package.json should also be in root folder.
+     
+    Note: The response should be of the type that it can be eassily be converted into the json.
+
     The designs should be responsive, accessible, and optimized for performance, ensuring a great user experience across devices. Focus on intuitive UI, with clear navigation, smooth animations, and high attention to visual details such as spacing, typography, and color schemes.`,
-    projectContext: {
-      framework: "react",
-      styling: "tailwind",
-      theme: "dark",
-      requirements: {
-        responsive: true,
-        accessibility: true,
-        performance: true
-      }
+  projectContext: {
+    framework: "react",
+    styling: "tailwind",
+    theme: "dark",
+    requirements: {
+      responsive: true,
+      accessibility: true,
+      performance: true
     }
+  }
 };
 
 app.use(cors({
@@ -44,45 +54,35 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 app.use(cookieParser());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 
-// Function to clean and normalize content strings
-const cleanContentString = (str) => {
-  return str
-    .replace(/\r?\n/g, '\\n')
-    .replace(/\t/g, '\\t')
-    .replace(/\\/g, '\\\\')
-    .replace(/"/g, '\\"')
-    .replace(/\\\\n/g, "\n")
-    .replace(/\\\\t/g, "\t")
-    .replace(/\\\"/g, '"')
-    .replace(/```(json)?|```/g, '')
-    .trim();
+// Function to extract JSON from response
+const extractJsonFromResponse = (text) => {
+  const jsonStart = text.indexOf('{');
+  const jsonEnd = text.lastIndexOf('}') + 1;
+  if (jsonStart === -1 || jsonEnd === 0) {
+    throw new Error('No valid JSON found in response');
+  }
+  return text.slice(jsonStart, jsonEnd);
 };
 
-// Function to prepare response for JSON parsing
-const prepareJsonResponse = (responseStr) => {
+// Function to safely parse JSON
+const safeJsonParse = (text) => {
   try {
-    // Remove any markdown code block syntax
-    let cleaned = responseStr.replace(/^```json\s*|\s*```$/g, '');
-    
-    // Remove any non-printable characters
-    cleaned = cleaned.replace(/[^\x20-\x7E\n\t]/g, '');
-    
-    // Attempt to find the JSON object boundaries
-    const startIdx = cleaned.indexOf('{');
-    const endIdx = cleaned.lastIndexOf('}');
-    
-    if (startIdx === -1 || endIdx === -1) {
-      throw new Error('Invalid JSON structure');
+    // First try direct parsing
+    return JSON.parse(text);
+  } catch (e) {
+    // If direct parsing fails, try to clean the string
+    try {
+      // Handle the specific escape sequence issue in package.json
+      const fixedText = text.replace(/\\\n/g, '\\n')
+                           .replace(/\\{2,}/g, '\\')
+                           .replace(/\r\n/g, '\n')
+                           .replace(/\t/g, '\\t');
+      return JSON.parse(fixedText);
+    } catch (e2) {
+      throw new Error(`Failed to parse JSON: ${e2.message}`);
     }
-    
-    // Extract just the JSON portion
-    cleaned = cleaned.slice(startIdx, endIdx + 1);
-    
-    return cleaned;
-  } catch (error) {
-    throw new Error(`Failed to prepare JSON response: ${error.message}`);
   }
 };
 
@@ -120,26 +120,21 @@ app.post("/generate-website", async (req, res) => {
 
     let responseData = result.response.candidates[0].content.parts[0].text;
     
-    // Clean and prepare the response for parsing
-    const cleanedResponse = prepareJsonResponse(responseData);
-    console.log(cleanedResponse);
-    // Parse the cleaned response
-    let responseJson = JSON.parse(cleanedResponse);
+    // Extract JSON from the response
+    const jsonString = extractJsonFromResponse(responseData);
     
-    // Clean up each file's content
-    responseJson.code.files = responseJson.code.files.map(file => ({
-      ...file,
-      content: cleanContentString(file.content)
-    }));
+    // Parse the JSON
+    const parsedData = safeJsonParse(jsonString);
 
-    res.setHeader("Content-Type", "application/json");
-    res.status(200).json(responseJson);
+    // Send the response
+    res.status(200).json(parsedData);
 
   } catch (error) {
     console.error("Error processing response:", error);
     res.status(500).json({ 
       error: "An error occurred while processing the response.",
-      details: error.message 
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
     });
   }
 });
