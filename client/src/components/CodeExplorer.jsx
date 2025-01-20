@@ -60,15 +60,16 @@ const CodeExplorer = ({ fileData, webContainer, url, isLoading }) => {
                 }}
               />
             ) : (
-              <div className="h-full">
+              <div className="h-full bg-white block z-50">
                 {isLoading ? (
-                    <div className='h-full w-full flex items-center justify-center'>
-                    <ClipLoader size={70} color="#ffffff"/>
+                    <div className='h-full w-full flex flex-col items-center justify-center align-middle bg-zinc-900'>
+                        <ClipLoader size={70} color="#ffffff"/>
+                        <p className='text-white text-4xl'>Downloading Node Modules</p>
                     </div>
                 ) : url ? (
                   <iframe
                     src={url}
-                    className="w-full h-full"
+                    className="w-full h-full block z-50 bg-none"
                     allow="cross-origin-isolated"
                     title="Website Preview"
                   />

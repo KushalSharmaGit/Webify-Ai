@@ -147,8 +147,9 @@ export const Builder = () => {
     }, [prompt]);
     if (!generatedWebsite) {
         return (
-            <div className='h-screen w-screen flex items-center justify-center'>
-            <ClipLoader size={70}/>
+            <div className='h-screen w-screen flex flex-col items-center justify-center align-middle bg-zinc-900'>
+            <ClipLoader size={70} color="#ffffff"/>
+            <p className='text-white text-4xl'>Creating your Webiste</p>
             </div>
         );
     }

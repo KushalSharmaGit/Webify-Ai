@@ -25,13 +25,16 @@ const context = {
     - Keep the index.css in the src folder and follow the correct folder structure
     - index.html is the entry point of our application so use it for the main in the package.json
     -Use export in each file including postcss.config.js and do not use module.export anywhere because be have set the type as module.
-    -Also Give the type in package.json as module and use module type exports in each file and follow all other rules as well.
-    - Also include the files which you need according to the project like components, pages etc files they are optional only give is they are required.
+    -Give the type in package.json as module and use module type exports in each file and follow all other rules as well.
+    - Include the files which you need according to the project like components, pages etc files they are optional only give is they are required.
     - Ensure giving the correct tsconfig.json file in order the application works as expexted and can import modules.
-    - Also make sure that the package.json contains all the dependencies required with correct form
+    -Make sure that the package.json contains all the dependencies required with correct form
+    -Make sure to import the index.css in the main.tsx
     - Give me the proper content for each file according to the project
     - Give the proper file structure in the response.
+    - Make sure the content of the config files is correct and the dependencies are also correct in ordrer to apply styles to the application and the working of the application and do not include the rreferences of the files which are not included in the response.
 
+    - Make sure all the content, loction of files, folders and the dependencies are correct and the application works as expected.
     Alert: The Location of the index.html(in the root folder) and index.css(in the src folder) is very important place it very carefully and place all the config files like postcss.config.js, tsconfig.json, tailwind.config.js, and the package.json should also be in root folder.
      
     Note(Important): The response should be of the type that it can be eassily be converted into the json.
