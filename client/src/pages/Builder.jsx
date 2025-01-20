@@ -4,6 +4,7 @@ import CodeExplorer from '../components/CodeExplorer';
 import { useWebContainer } from '@/hook/useWebContainer';
 import { generateWebsite } from '../utils/generateWebsite';
 import { fileExplorerData } from '../utils/FileSystem';
+import {ClipLoader} from 'react-spinners';
 
 export const Builder = () => {
     const { webContainer, loading, error } = useWebContainer();
@@ -11,6 +12,7 @@ export const Builder = () => {
     const navigate = useNavigate();
     const { prompt } = location.state || {};
     const [url, setUrl] = useState(null);
+    const [urlLoading, setUrlLoading] = useState(true);
     const [generatedWebsite, setGeneratedWebsite] = useState(null);
     const [code, setCode] = useState(null);
     const [processError, setProcessError] = useState(null);
@@ -75,6 +77,7 @@ export const Builder = () => {
                 console.log('Server ready on port:', port);
                 console.log('Server URL:', url);
                 setUrl(url);
+                setUrlLoading(false);
             });
         } catch (error) {
             console.error('Error during dev server startup:', error);
@@ -125,7 +128,7 @@ export const Builder = () => {
                 webContainer.mount(mountFiles)
                     .then(() => {
                         console.log('Files mounted successfully!');
-                        //return startDevServer();
+                        return startDevServer();
                     })
                     .catch((err) => {
                         console.error('Error mounting files:', err);
@@ -142,38 +145,19 @@ export const Builder = () => {
     useEffect(() => {
         fetchAndGenerateWebsite();
     }, [prompt]);
-
-    if (loading) {
-        return <div className="p-4">Loading WebContainer...</div>;
-    }
-
-    if (error || processError) {
-        return <div className="p-4 text-red-500">{error || processError}</div>;
-    }
-
     if (!generatedWebsite) {
-        return <div className="p-4">Loading website data...</div>;
+        return (
+            <div className='h-screen w-screen flex items-center justify-center'>
+            <ClipLoader size={70}/>
+            </div>
+        );
     }
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="container">
             {code ? (
-                <div className="space-y-4">
-                    <CodeExplorer fileData={code} />
-                    {url ? (
-                        <div className="w-full h-[600px] border border-gray-200 rounded-lg overflow-hidden">
-                            <iframe 
-                                src={url}
-                                className="w-full h-full"
-                                allow="cross-origin-isolated"
-                                title="Website Preview"
-                            />
-                        </div>
-                    ) : (
-                        <div className="p-4 text-gray-500 text-center border rounded-lg">
-                            Preview is not available
-                        </div>
-                    )}
+                <div>
+                    <CodeExplorer fileData={code} webContainer={webContainer} url={url} isLoading={urlLoading}/>
                 </div>
             ) : (
                 <div className="p-4 text-gray-500 text-center">No data available</div>
