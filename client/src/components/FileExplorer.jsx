@@ -1,73 +1,79 @@
-import React, { useState } from 'react';
-import { FolderTree, File, ChevronRight, ChevronDown } from 'lucide-react';
+import React, { useState } from "react";
+import { 
+  FolderIcon, 
+  FileIcon, 
+  ChevronDownIcon, 
+  ChevronRightIcon 
+} from "lucide-react";
 
-function FileNode({ item, depth, onFileClick }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+const FileExplorer = ({ fileData, onFileSelect }) => {
+  const [expandedFolders, setExpandedFolders] = useState(new Set());
+  const [selectedFile, setSelectedFile] = useState(null);
 
-  const handleClick = () => {
-    if (item.type === 'folder') {
-      setIsExpanded(!isExpanded);
-    } else {
-      onFileClick(item);
-    }
+  // Toggle folder expansion
+  const toggleFolder = (folderId) => {
+    setExpandedFolders((prev) => {
+      const next = new Set(prev);
+      if (next.has(folderId)) {
+        next.delete(folderId);
+      } else {
+        next.add(folderId);
+      }
+      return next;
+    });
+  };
+
+  // Render file tree
+  const renderFileTree = (nodes, level = 0) => {
+    return nodes.map((node) => (
+      <div key={node.id} style={{ paddingLeft: `${level * 16}px` }}>
+        <button
+          className={`w-full flex items-center gap-2 px-2 py-1 hover:bg-gray-700 rounded-sm ${
+            selectedFile?.id === node.id ? "bg-gray-800" : ""
+          }`}
+          onClick={() => {
+            if (node.type === "folder") {
+              toggleFolder(node.id);
+            } else {
+              setSelectedFile(node);
+              onFileSelect(node);
+            }
+          }}
+        >
+          {node.type === "folder" ? (
+            <>
+              {expandedFolders.has(node.id) ? (
+                <ChevronDownIcon className="w-4 h-4" />
+              ) : (
+                <ChevronRightIcon className="w-4 h-4" />
+              )}
+              <FolderIcon className="w-4 h-4" />
+            </>
+          ) : (
+            <>
+              <span className="w-4" />
+              <FileIcon className="w-4 h-4" />
+            </>
+          )}
+          <span className="text-sm text-white">{node.name}</span>
+        </button>
+        {node.type === "folder" && expandedFolders.has(node.id) && node.children && (
+          <div>{renderFileTree(node.children, level + 1)}</div>
+        )}
+      </div>
+    ));
   };
 
   return (
-    <div className="select-none">
-      <div
-        className="flex items-center gap-2 p-2 hover:bg-gray-800 rounded-md cursor-pointer"
-        style={{ paddingLeft: `${depth * 1.5}rem` }}
-        onClick={handleClick}
-      >
-        {item.type === 'folder' && (
-          <span className="text-gray-400">
-            {isExpanded ? (
-              <ChevronDown className="w-4 h-4" />
-            ) : (
-              <ChevronRight className="w-4 h-4" />
-            )}
-          </span>
-        )}
-        {item.type === 'folder' ? (
-          <FolderTree className="w-4 h-4 text-blue-400" />
-        ) : (
-          <File className="w-4 h-4 text-gray-400" />
-        )}
-        <span className="text-gray-200">{item.name}</span>
+    <div className="h-full border-r border-gray-700">
+      <div className="p-2 border-b border-gray-700">
+        <h2 className="font-semibold text-gray-300">Explorer</h2>
       </div>
-      {item.type === 'folder' && isExpanded && item.children && (
-        <div>
-          {item.children.map((child, index) => (
-            <FileNode
-              key={`${child.path}-${index}`}
-              item={child}
-              depth={depth + 1}
-              onFileClick={onFileClick}
-            />
-          ))}
-        </div>
-      )}
+      <div className="h-[calc(100vh-40px)] overflow-y-auto p-2">
+        {renderFileTree(fileData)}
+      </div>
     </div>
   );
-}
+};
 
-export function FileExplorer({ files, onFileSelect }) {
-  return (
-    <div className="bg-gray-900 rounded-lg shadow-lg p-4 h-full overflow-auto">
-      <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-gray-100">
-        <FolderTree className="w-5 h-5" />
-        File Explorer
-      </h2>
-      <div className="space-y-1">
-        {files.map((file, index) => (
-          <FileNode
-            key={`${file.path}-${index}`}
-            item={file}
-            depth={0}
-            onFileClick={onFileSelect}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
+export default FileExplorer;

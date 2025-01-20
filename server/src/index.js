@@ -27,12 +27,14 @@ const context = {
     -Use export in each file including postcss.config.js and do not use module.export anywhere because be have set the type as module.
     -Also Give the type in package.json as module and use module type exports in each file and follow all other rules as well.
     - Also include the files which you need according to the project like components, pages etc files they are optional only give is they are required.
+    - Ensure giving the correct tsconfig.json file in order the application works as expexted and can import modules.
+    - Also make sure that the package.json contains all the dependencies required with correct form
     - Give me the proper content for each file according to the project
     - Give the proper file structure in the response.
 
     Alert: The Location of the index.html(in the root folder) and index.css(in the src folder) is very important place it very carefully and place all the config files like postcss.config.js, tsconfig.json, tailwind.config.js, and the package.json should also be in root folder.
      
-    Note: The response should be of the type that it can be eassily be converted into the json.
+    Note(Important): The response should be of the type that it can be eassily be converted into the json.
 
     The designs should be responsive, accessible, and optimized for performance, ensuring a great user experience across devices. Focus on intuitive UI, with clear navigation, smooth animations, and high attention to visual details such as spacing, typography, and color schemes.`,
   projectContext: {
