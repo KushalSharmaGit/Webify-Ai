@@ -11,35 +11,71 @@ const port = process.env.PORT || 5000;
 
 // Define the context object
 const context = {
-  prompt: `For all designs I ask you to create, prioritize beauty, originality, and functionality. 
-    The webpages should not be cookie-cutter but rather fully feature-rich and production-ready, with a polished, professional aesthetic.
-    
-    Default design considerations:
-    - Use JSX syntax with Tailwind CSS classes for styling, React hooks for state management, and Lucide React for icons.
-    - Avoid installing extra UI theme packages, icon sets, or dependencies unless explicitly requested. 
-    - For logos and icons, default to Lucide React icons.
-    - For images, use stock photos from Unsplash (using valid URLs) without downloading them.
-    - Give me all the files of the project just do not include the node_modules folder
-    - Also include files like package.json,tsconfig, tailwind.config.js, index.css, main.tsx, index.html, App.tsx,postcss.config.jss and all the other config files
-    - Keep the index.html in the root folder and follow correct folder structure.
-    - Keep the index.css in the src folder and follow the correct folder structure
-    - index.html is the entry point of our application so use it for the main in the package.json
-    -Use export in each file including postcss.config.js and do not use module.export anywhere because be have set the type as module.
-    -Give the type in package.json as module and use module type exports in each file and follow all other rules as well.
-    - Include the files which you need according to the project like components, pages etc files they are optional only give is they are required.
-    - Ensure giving the correct tsconfig.json file in order the application works as expexted and can import modules.
-    -Make sure that the package.json contains all the dependencies required with correct form
-    -Make sure to import the index.css in the main.tsx
-    - Give me the proper content for each file according to the project
-    - Give the proper file structure in the response.
-    - Make sure the content of the config files is correct and the dependencies are also correct in ordrer to apply styles to the application and the working of the application and do not include the rreferences of the files which are not included in the response.
+  prompt: `For all designs, prioritize beauty, originality, and functionality. The webpages must be fully feature-rich, production-ready, and visually polished. The designs should reflect a professional aesthetic and follow best practices.
 
-    - Make sure all the content, loction of files, folders and the dependencies are correct and the application works as expected.
-    Alert: The Location of the index.html(in the root folder) and index.css(in the src folder) is very important place it very carefully and place all the config files like postcss.config.js, tsconfig.json, tailwind.config.js, and the package.json should also be in root folder.
-     
-    Note(Important): The response should be of the type that it can be eassily be converted into the json.
+Design and Development Guidelines
+Code Requirements:
 
-    The designs should be responsive, accessible, and optimized for performance, ensuring a great user experience across devices. Focus on intuitive UI, with clear navigation, smooth animations, and high attention to visual details such as spacing, typography, and color schemes.`,
+Use JSX syntax for React components.
+Style components with Tailwind CSS classes.
+Use React hooks for state management.
+Use Lucide React icons for all icons and logos (default icon set).
+Do not install extra UI theme libraries, icon sets, or dependencies unless explicitly requested.
+Assets and Media:
+
+Use stock images sourced from Unsplash via valid URLs (do not download images).
+File and Folder Structure:
+
+Ensure a clear and well-organized folder structure with files placed correctly:
+Index.html:
+Located in the root folder.
+Serves as the entry point for the application.
+Includes proper references to scripts and styles for Tailwind CSS setup.
+Index.css:
+Located in the src folder.
+Import this file in the main.tsx file for global styles.
+Configuration Files:
+All configuration files, such as package.json, tsconfig.json, tailwind.config.js, and postcss.config.js, must be in the root folder.
+Ensure no configuration files are placed in the src folder.
+Config and Dependencies:
+
+Include all required files for the project, such as:
+package.json
+tsconfig.json
+tailwind.config.js
+postcss.config.js
+index.css
+index.html
+main.tsx
+App.tsx
+Ensure the configurations enable Tailwind CSS to work correctly out-of-the-box without errors.
+Include dependencies such as:
+"@emotion/react": "^11.14.0"
+Use module type exports in all files and set "type": "module" in package.json.
+Ensure proper setup of Tailwind CSS in postcss.config.js and tailwind.config.js.
+Project Context:
+
+The project uses React, styled with Tailwind CSS, and defaults to a dark theme.
+Ensure the design is:
+Responsive: Adapt seamlessly across devices.
+Accessible: Meet accessibility standards.
+Optimized: High performance with efficient and clean code.
+Output Expectations:
+
+Provide proper content for each file according to the project requirements.
+Ensure the correct location of all files and folders.
+Place all configuration files in the root folder, not in src.
+The package.json should include all necessary dependencies and scripts for seamless execution.
+Tailwind CSS must work without inaccuracies in configuration files.
+Critical Notes:
+The location of index.html (in the root folder) and index.css (in the src folder) is critical.
+All configuration files (package.json, postcss.config.js, tailwind.config.js, tsconfig.json, etc.) must be placed in the root folder—no exceptions.
+Ensure all references to files, folders, and dependencies are accurate to avoid runtime errors.
+Provide a response that can easily be converted into a JSON-compatible format this is important as it may break the application.
+Key Deliverables:
+Fully functional project setup with proper folder structure and correct placement of all files.
+Accurate and functional Tailwind CSS integration with all configurations in the root folder.
+A visually stunning, production-ready design with a professional and polished look.`,
   projectContext: {
     framework: "react",
     styling: "tailwind",
